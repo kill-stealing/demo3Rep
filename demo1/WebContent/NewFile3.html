@@ -1,0 +1,146 @@
+	<?php /* Template Name: the-bell */ ?>
+	
+	<?php
+/**
+ * TheBell template file
+ *
+ * @package NorthStar
+ * @subpackage IBM_NorthStar
+ * @since WP IBM NorthStar 1.0
+ */
+
+get_header(); 
+
+function getUserList(){
+	$args = array('orderby' => 'display_name');
+	$wp_user_query = new WP_User_Query($args);
+	$authors = $wp_user_query->get_results();
+	$result= array();
+	if (!emptyempty($authors)) {
+     		foreach ($authors as $author) {
+          		$author_info = get_userdata($author->ID);
+	  		array_push($result,$author_info->user_email);
+    		 }
+	} 
+	return $result;
+};
+?>
+<div class="ibm-columns">
+	<div class="ibm-col-1-1 ibm-background-white-60 ibm-center"> <!--Slider Code <br>--> <?php wd_slider(1); ?> </div>
+    
+	<div class="ibm-col-1-1 ibm-background-white-60 ibm-center ibm-padding-top-2">
+		<?php /**wp_nav_menu( array( 'theme_location' => 'Featured Items', 'container_class' => 'menu' ) );*/  ?>
+<?php wp_page_menu( array( 'depth'       => 0,
+	'sort_column' => 'menu_order, post_title',
+	'menu_class'  => 'menu',
+	'include'     => '',
+	'exclude'     => '720',
+	'echo'        => true,
+	'show_home'   => false,
+	'link_before' => '',
+	'link_after'  => ''  ) ); ?>
+	</div>
+	
+<?php /** Code below is for sticky posts only */ ?>
+	<div id="main-list-sticky" class="ibm-columns" data-widget="setsameheight" data-items=".ibm-card">
+
+<?php /** ------------------------Disable Sticky Posts for this Page - Adam 3-3-2017
+
+
+	<?php // The Query
+ 	$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+$args = array(
+'posts_per_page' => 3,
+'paged' => $paged,
+'category_name'  => 'The Bell',
+'post_status' => 'publish',
+'orderby' => 'date',
+'order' => 'DESC',
+'post__in'  => get_option( 'sticky_posts' ),
+'showposts' => 12
+);
+query_posts($args);
+		
+		// The Loop
+		while ( have_posts() ) : the_post(); ?>   
+		<div class="mypost ibm-col-4-1 ibm-col-medium-2-1 ibm-left ibm-margin-bottom-1">
+        		<div class="ibm-card ibmCard">
+            			<a target="_blank" href="<?php the_field('url'); ?>" class="ibm-blocklink" data-post_id="<?php echo get_the_ID() ?>">
+					<div class="ibm-card__image ibm-center">
+						<img style="object-fit:cover; width:100%; max-width:300px; height:180px;"
+						src="<?php echo catch_that_image1();?>" alt="" />
+					</div>
+					<div class="ibm-card__content">
+						<h4 class="ibm-bold ibm-h4"><?php the_title();?></h4>
+						<p class="ring_summary"><?php echo mb_strimwidth(the_field('excerpt'), 0, 110, '...'); ?></p>
+					</div>
+				</a>
+					<div class="likeDiv">
+						<ul class="ibm-link-list">
+  							<li><?php echo getPostLikeLink(get_the_ID());?></li>
+  							<li><a class="ibm-email-link" href="mailto:?subject=Thought you'd like to see this post from The Ring: <?php the_title();?>&amp;body=<?php the_field('url'); ?>"></a></li>
+							<!--<li><a class="ibm-chat-link" href="<?php comments_link(); ?>"><?php comments_number( '0', '1', '%' ); ?></a></li>-->
+						</ul>
+					</div>
+        		</div>
+    		</div>
+<?php endwhile; ?>
+</div>
+	
+------------------------End of disabled Sticky Post - Adam 3-3-2017 */ ?>
+
+	<div id="main-list" class="ibm-columns" data-widget="setsameheight" data-items=".ibm-card">
+	<?php // The Query
+ 	
+ 	$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+$args = array(
+'category_name'  => 'The Bell',
+'posts_per_page' => 12,
+'paged' => $paged,
+'orderby' => 'date',
+'post_status' => 'publish',
+'ignore_sticky_posts' => 1,
+'post__not_in' =>  get_option( 'sticky_posts' ),
+'order' => 'DESC',
+'showposts' => 12
+);
+query_posts($args);
+
+// The Loop
+while ( have_posts() ) : the_post(); ?>   
+<div class="mypost ibm-col-4-1 ibm-col-medium-2-1 ibm-left">
+        		<div class="ibm-card ibmCard">
+            			<a target="_blank" href="<?php the_field('url'); ?>" class="ibm-blocklink" data-post_id="<?php echo get_the_ID() ?>">
+					<div class="ibm-card__image ibm-center">
+						<img style="object-fit:cover; width:100%; max-width:300px; height:180px;"
+						src="<?php echo catch_that_image1();?>" alt="" />
+					</div>
+					<div class="ibm-card__content">
+						<h4 class="ibm-bold ibm-h4"><?php the_title();?></h4>
+						<p class="ring_summary"><?php echo mb_strimwidth(the_field('excerpt'), 0, 110, '...'); ?></p>
+					</div>
+				</a>
+					<div class="likeDiv">
+						<ul class="ibm-link-list">
+  							<li><?php echo getPostLikeLink(get_the_ID());?></li>
+  							<li><a class="ibm-email-link" href="mailto:?subject=Thought you'd like to see this post from The Ring: <?php the_title();?>&amp;body=<?php the_field('url'); ?>"></a></li>
+<!--
+  							<li><a class="ibm-chat-link" href="<?php comments_link(); ?>"><?php comments_number( '0', '1', '%' ); ?></a></li>
+-->
+						</ul>
+					</div>
+        		</div>
+    		</div>
+	<?php endwhile;?>
+	<?php
+    	the_posts_pagination( array(
+        'next_text'          =>Next,
+	'screen_reader_text' => ' '
+    	) );
+	?>
+	<?php wp_reset_query();?>
+</div>
+</div>
+
+
+<?php get_footer(); ?>

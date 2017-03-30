@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="js/angular.min.js"></script>
+<script src="js/jquery-1.10.1.min.js"></script>
+<script>
+	angular.module('myApp',[]).controller("testController",function($scope){
+		
+		
+		$scope.add=function(){
+			$("#content").append('<input type="text" id="c1" ng-model="c3">{{c1}}');
+		}
+	});
+</script>
+</head>
+<body>
+<div ng-controller="testController">
+<input id="test" type="text" ng-model="test">
+{{test}}
+<input type="button" id="addButton" ng-click="add()" value="click"/>
+
+<input type="text" id="c1" ng-model="c2">{{c2}}{{c3}}
+<div id="content">
+	
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Insert title here</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="js/jquery-1.10.1.min.js"></script>
+</head>
+<script>
+function test(){
+	var type0=$("input[id='type0']:checked").val();
+	var type1=$("input[id='type1']:checked").val();
+	var type2=$("input[id='type2']:checked").val();
+	var type3=$("input[id='type3']:checked").val();
+	if(type0!=undefined){
+		$("#file1").css("display","block");
+		$("#file2").css("display","none");
+		$("#type1Input").css("display","none");
+		$("#type2Input").css("display","none");
+		var file = $("#file1");
+		file.after(file.clone().val(""));
+		file.remove();
+	}
+	if(type1!=undefined){
+		$("#file1").css("display","none");
+		$("#file2").css("display","none");
+		$("#type1Input").css("display","block");
+		$("#type2Input").css("display","none");
+		$("#type1Input").val("");
+	}
+	if(type2!=undefined){
+		$("#file1").css("display","none");
+		$("#file2").css("display","none");
+		$("#type1Input").css("display","none");
+		$("#type2Input").css("display","block");
+		$("#type2Input").val("");
+	}
+	if(type3!=undefined){
+		$("#file1").css("display","none");
+		$("#file2").css("display","none");
+		$("#file3").css("display","block");
+		$("#type1Input").css("display","none");
+		$("#type2Input").css("display","none");
+	}
+}
+
+function submitForm(){
+	 console.log("dddd  ");
+	var type=$("input[name='type']:checked").val();
+	if(type==undefined){
+		alert("Please select at least one type!");
+		return;
+	}
+	if(type==0){
+		if($("#file1").val()==''){
+			alert("Please browse a file!");
+		}
+	}
+	
+	if(type==1){
+		if($("#type1Input").val()==''){
+			alert("Please enter some words!");
+		}
+	}
+	
+	if(type==2){
+		if($("#type2Input").val()==''){
+			alert("Please enter some words!");
+		}
+	}
+	if(type!=3){
+	var form=$("#form");
+		form.action="/helloworld";
+		form.submit();
+	}else{
+		var form=$("#form");
+		form.action="https://watson-api-explorer.mybluemix.net/visual-recognition/api/v3/recognize_text?api_key=a76710f44212efbe5d5fddecbda8f667ce0a0cde&version=2016-05-19";
+		form.submit();
+	}
+	
+}
+
+    function doUpload() {  
+         var formData = new FormData($( "#form1" )[0]);
+         $.ajax({  
+              url: 'https://watson-api-explorer.mybluemix.net/visual-recognition/api/v3/recognize_text?api_key=a76710f44212efbe5d5fddecbda8f667ce0a0cde&version=2016-05-19' ,  
+			  //url: "/helloworld",
+              type: 'POST',  
+              data: formData,  
+              async: false,  
+              cache: false,  
+              contentType: false,  
+              processData: false,  
+              success: function (returndata) {  
+              	if(returndata!=null&&returndata!=undefined){
+              		var result="";
+              		for(var i=0;i<returndata.images[0].words.length;i++){
+              			result=result+returndata.images[0].words[i].word+",";
+              		}
+              		alert("result "+result);
+              	}
+              },
+              error: function (returndata) {  
+                  alert(returndata);  
+              }  
+         });  
+    }  
+    
+    function doUpload1() { 
+    	var form=$("#form1");
+		form.action="/helloworld";
+		form.submit();
+    }
+
+</script>
+<body>
+<fieldset>
+<legend>convert speech and text</legend>
+<form action="/helloworld" method="post" enctype="multipart/form-data" id="form">
+<input type="radio" id="type0" name="type" value="0" onclick="test()"/>speech to text    ==============>>>English speech to English text <br> 
+<input type="radio" id="type1" name="type" value="1" onclick="test()"/>text to speech         <br>
+<input type="radio" id="type2" name="type" value="2" onclick="test()"/>translate language==============>>>Chinese to English<br>
+<input type="radio" id="type3" name="type" value="3" onclick="test()"/>visual recognition<br>
+
+
+<input type="file" id="file1" name="file1" />
+<input type="file" id="file3" name="file3" style="display:none;"/>
+
+<textarea id="type1Input" name="type1Input" cols="40" rows="3" style="display:none;"></textarea>
+
+<textarea id="type2Input" name="type2Input" cols="40" rows="3" style="display:none;"></textarea>
+<input type="button" value="submit" id="submit1" onclick="submitForm()"/>
+</form>
+<form action="/helloworld" method="post" enctype="multipart/form-data" id="form1">
+<input type="file" id="file4" name="file4" />
+
+<input type="button" value="submit" id="submit2" onclick="doUpload1()"/>
+
+</form>
+</fieldset>
+</body>
+</html>

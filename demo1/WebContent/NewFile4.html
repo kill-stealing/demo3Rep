@@ -1,0 +1,120 @@
+<?php /* Template Name: this-week */ ?>
+	
+<?php get_header(); ?>
+
+<div class="ibm-col-1-1 ibm-background-white-60 ibm-center"> <!--Slider Code <br>--> <?php wd_slider(1); ?> </div>
+
+<div class="ibm-columns">
+	<div class="ibm-col-1-1 ibm-background-white-60 ibm-center ibm-padding-top-2">
+		<?php wp_nav_menu( array( 'theme_location' => 'Featured Items', 'container_class' => 'menu' ) ); ?>
+	</div>
+	
+	<?php /** Code below is for sticky posts only */ ?>
+	<div id="main-list-sticky" class="ibm-columns" data-widget="setsameheight" data-items=".ibm-card">
+	<?php // The Query
+ 	$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+$args = array(
+'posts_per_page' => 3,
+'paged' => $paged,
+'post_status' => 'publish',
+'orderby' => 'date',
+'order' => 'DESC',
+'post__in'  => get_option( 'sticky_posts' ),
+'showposts' => 12,
+);
+query_posts($args);
+		
+		// The Loop
+		while ( have_posts() ) : the_post(); ?>   
+		<div class="mypost ibm-col-4-1 ibm-col-medium-2-1 ibm-left ibm-margin-bottom-1">
+        		<div class="ibm-card ibmCard">
+            			<a target="_blank" href="<?php the_field('url'); ?>" class="ibm-blocklink" data-post_id="<?php echo get_the_ID() ?>">
+					<div class="ibm-card__image ibm-center">
+						<img style="object-fit:cover; width:100%; max-width:300px; height:180px;"
+						src="<?php echo catch_that_image1();?>" alt="" />
+					</div>
+					<div class="ibm-card__content">
+						<h4 class="ibm-bold ibm-h4"><?php the_title();?></h4>
+						<p class="ring_summary"><?php echo mb_strimwidth(the_field('excerpt'), 0, 110, '...'); ?></p>
+					</div>
+				</a>
+					<div class="likeDiv">
+						<ul class="ibm-link-list">
+  							<li><?php echo getPostLikeLink(get_the_ID());?></li>
+  							<li><a class="ibm-email-link" href="mailto:?subject=Thought you'd like to see this post from The Ring: <?php the_title();?>&amp;body=<?php the_field('url'); ?>"></a></li>
+<!--
+  							<li><a class="ibm-chat-link" href="<?php comments_link(); ?>"><?php comments_number( '0', '1', '%' ); ?></a></li>-->
+						</ul>
+					</div>
+        		</div>
+    		</div>
+<?php endwhile; ?>
+</div>
+
+<?php /* Code below is for the non sticky posts sorted by date */ ?>
+
+<div class="ibm-columns">
+	<div class="ibm-col-1-1 ibm-background-white-60 ibm-center ibm-padding-top-2">
+		 
+	</div>
+	
+	<?php /** the_content(); */?>
+	<div id="main-list" class="ibm-columns" data-widget="setsameheight" data-items=".ibm-card">
+
+	<?php // The Query
+ 	$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+
+$args = array(
+'posts_per_page' => 3,
+'paged' => $paged,
+'post_status' => 'publish',
+'orderby' => 'date',
+'order' => 'DESC',
+'ignore_sticky_posts' => 1,
+'post__not_in' =>  get_option( 'sticky_posts' ),
+'showposts' => 12
+);
+
+query_posts($args);
+		// The Loop
+		while ( have_posts() ) : the_post(); ?>   
+		<div class="mypost ibm-col-4-1 ibm-col-medium-2-1 ibm-left ibm-margin-bottom-1">
+        		<div class="ibm-card ibmCard">
+            			<a target="_blank" href="<?php the_field('url'); ?>" class="ibm-blocklink" data-post_id="<?php echo get_the_ID() ?>">
+					<div class="ibm-card__image ibm-center">
+						<img style="object-fit:cover; width:100%; max-width:300px; height:180px;"
+						src="<?php echo catch_that_image1();?>" alt="" />
+					</div>
+					<div class="ibm-card__content">
+						<h4 class="ibm-bold ibm-h4"><?php the_title();?></h4>
+						<p class="ring_summary"><?php echo mb_strimwidth(the_field('excerpt'), 0, 110, '...'); ?></p>
+					</div>
+				</a>
+					<div class="likeDiv">
+						<ul class="ibm-link-list">
+  							<li><?php echo getPostLikeLink(get_the_ID());?></li>
+  							<li><a class="ibm-email-link" href="mailto:?subject=Thought you'd like to see this post from The Ring: <?php the_title();?>&amp;body=<?php the_field('url'); ?>"></a></li>
+<!--
+  							<li><a class="ibm-chat-link" href="<?php comments_link(); ?>"><?php comments_number( '0', '1', '%' ); ?></a></li>
+-->
+						</ul>
+					</div>
+        		</div>
+    		</div>
+	<?php endwhile; ?>
+<div class="nav-links">
+<?php
+	$abc=home_url('/');
+	echo paginate_links( array(
+		'base' => $abc . '%_%',
+		'format' => 'index.php/this-week/page/%#%'
+	));
+	?>
+</div>
+	<?php wp_reset_query();?>
+
+</div>
+</div>
+</div>
+        
+<?php get_footer(); ?>
