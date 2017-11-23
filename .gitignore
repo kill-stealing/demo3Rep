@@ -3,6 +3,7 @@
 *.project
 *.prefs
 org.eclipse.*.xml
+
 WEB-INF/classes/*
 demo1/WebContent/WEB-INF/classes/
 demo1/.settings/
