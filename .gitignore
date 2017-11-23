@@ -6,3 +6,9 @@ org.eclipse.*.xml
 WEB-INF/classes/*
 demo1/WebContent/WEB-INF/classes/
 demo1/.settings/
+
+itcast-springboot/WebContent/WEB-INF/classes/
+itcast-springboot/.settings/
+itcast-springboot/bin/
+itcast-springboot/target/
+itcast-springboot/build/
